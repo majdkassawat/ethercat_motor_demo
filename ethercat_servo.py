@@ -62,6 +62,24 @@ class EthercatServo:
     def set_target_position(self, pos: int) -> None:
         self.write_sdo(self.TARGET_POSITION, 0, pos, size=4)
 
+    def set_target_position_after_gearbox(self, output_pos: int, gear_ratio: float) -> None:
+        """Set target position in terms of output position after a gearbox.
+
+        This helper multiplies ``output_pos`` by ``gear_ratio`` and sends the
+        resulting motor shaft position to the drive.  Use it when you want to
+        command the position at the load rather than directly at the motor.
+
+        Parameters
+        ----------
+        output_pos : int
+            Desired position of the output shaft after the gearbox.
+        gear_ratio : float
+            Gear ratio (motor revolutions per output revolution).
+        """
+
+        motor_pos = int(output_pos * gear_ratio)
+        self.set_target_position(motor_pos)
+
     def set_target_velocity(self, vel: int) -> None:
         self.write_sdo(self.TARGET_VELOCITY, 0, vel, size=4)
 
