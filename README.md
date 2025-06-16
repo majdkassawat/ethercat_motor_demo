@@ -35,3 +35,25 @@ your servo's documentation if these helpers do not work out of the box.
 
 - `ethercat_servo.py` – simple low level API for CiA&nbsp;402 EtherCAT servos
 - `demo.py` – example script using `EthercatServo`
+- `CodexHardwareLoop` – .NET solution for hardware-in-the-loop testing
+
+## Hardware-in-the-Loop Automation
+
+The `CodexHardwareLoop` directory contains a Visual Studio solution that
+automates running integration tests on a Windows PC attached to the servo.
+
+### Usage
+
+1. Install the .NET 8 SDK, Git and the GitHub CLI (`gh`).
+2. Open `CodexHardwareLoop.sln` in Visual Studio and run the `LocalAgent` project,
+   or execute `dotnet run --project CodexHardwareLoop/src/LocalAgent` from a
+   command prompt.
+3. The agent periodically fetches the repository. When a new commit is detected
+   you will be prompted to press <kbd>Y</kbd> to deploy and execute the
+   hardware‑in‑the‑loop tests.
+4. Test results are converted into an Allure report and pushed to a branch named
+   `results/<commit SHA>`.
+
+The included integration tests call the Python demo script to verify that the
+servo can be reached and that motion commands succeed.  Inspect the console
+output and the generated Allure report when debugging problems.

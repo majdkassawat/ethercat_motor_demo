@@ -1,0 +1,8 @@
+# Build artefacts
+bin/
+obj/
+**/bin/
+**/obj/
+TestResults/
+AllureReport/
+*.zip

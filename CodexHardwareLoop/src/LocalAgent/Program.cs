@@ -4,7 +4,13 @@ using System.Diagnostics;
 using System.IO.Compression;
 using System.Threading;
 
-const string repoPath  = @"C:\Dev\CodexHardwareLoop";
+var repoPath = Repository.Discover(Environment.CurrentDirectory);
+if (repoPath is null)
+{
+    Console.Error.WriteLine("Could not locate git repository from " + Environment.CurrentDirectory);
+    return;
+}
+repoPath = Path.GetDirectoryName(repoPath)!;
 const string remote    = "origin";
 const string branch    = "main";
 const string resultsBranchPrefix = "results/";
