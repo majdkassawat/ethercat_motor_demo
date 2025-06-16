@@ -65,3 +65,10 @@ class EthercatServo:
 
     def read_actual_position(self) -> int:
         return self.read_sdo(self.ACTUAL_POSITION, 0, size=4)
+
+    def start_motion(self) -> None:
+        """Trigger motion in profile position mode."""
+        # Set the "new set-point" and "change set immediately" bits
+        # according to CiA 402 profile position mode.
+        self.write_sdo(self.CONTROL_WORD, 0, 0x3F)
+        time.sleep(0.05)
