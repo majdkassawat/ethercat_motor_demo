@@ -1,5 +1,12 @@
-import argparse
 import os
+
+if os.getenv("SIMULATION") == "1":
+    from servo_simulator import ServoSimulator as EthercatServo
+else:
+    from ethercat_servo import EthercatServo
+
+import argparse
+
 import time
 
 from ethercat_servo import EthercatServo

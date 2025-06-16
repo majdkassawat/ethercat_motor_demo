@@ -14,6 +14,7 @@ namespace IntegrationTests
         [SetUp]
         public async Task Setup()
         {
+            Environment.SetEnvironmentVariable("SIMULATION", "1");
             _device = new DeviceController();
             await _device.ConnectAsync();
         }
