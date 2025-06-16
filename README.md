@@ -23,7 +23,11 @@ pip install pysoem
 python demo.py
 ```
 
-Edit the network interface name and slave position in `demo.py` if needed.
+By default the script uses the first network adapter returned by
+`get_first_adapter()` from `get_adapter_name.py`.  You can override the adapter
+name via the `ECAT_IFNAME` environment variable or with
+`python demo.py --ifname IFNAME`.  Adjust the slave position in `demo.py` if
+needed.
 
 Use `set_target_position_after_gearbox()` when commanding positions at the
 load side of a gearbox.  Pass the desired output position and the gearbox ratio
