@@ -9,12 +9,30 @@ from pathlib import Path
 class DeviceController:
     """Minimal hardware controller used by integration tests."""
 
+    def __init__(self) -> None:
+        self.servo = None
+
     async def connect(self) -> None:
         print("[HW] Connecting to robot…")
+        if os.getenv("SIMULATION") == "1":
+            from servo_simulator import ServoSimulator
+            self.servo = ServoSimulator()
+            self.servo.open()
+        else:
+            from ethercat_servo import EthercatServo
+            from get_adapter_name import get_first_adapter
+            ifname = os.getenv("ECAT_IFNAME", get_first_adapter())
+            self.servo = EthercatServo(ifname=ifname)
+            self.servo.open()
 
     async def run_self_test(self) -> str:
         print("[HW] Running self-test.")
         await asyncio.sleep(0.5)
+        if self.servo:
+            try:
+                self.servo.enable_operation()
+            except Exception:
+                pass
         return "OK"
 
     async def run_demo(self) -> int:
@@ -44,4 +62,9 @@ class DeviceController:
         return int(m.group(1)) if m else -1
 
     def close(self) -> None:
+        if self.servo:
+            try:
+                self.servo.close()
+            except Exception:
+                pass
         print("[HW] Disconnected.")
