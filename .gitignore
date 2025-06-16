@@ -7,3 +7,7 @@ TestResults/
 AllureReport/
 *.zip
 __pycache__/
+<<<<<<< codex/update-.gitignore-and-remove-cached-files
+.pytest_cache/
+=======
+>>>>>>> main
