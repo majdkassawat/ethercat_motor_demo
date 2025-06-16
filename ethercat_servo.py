@@ -75,6 +75,7 @@ class EthercatServo:
         self.write_sdo(self.CONTROL_WORD, 0, 0x3F)
         time.sleep(0.05)
 
+
     def release_brake(self) -> None:
         """Release the motor brake using digital outputs if available."""
         try:
@@ -92,3 +93,4 @@ class EthercatServo:
             state = 0
         self.write_sdo(self.DIGITAL_OUTPUTS, 1, state | self.CONTROLLER_BITS, size=1)
         time.sleep(0.05)
+
