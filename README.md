@@ -23,6 +23,13 @@ pip install -r requirements.txt
 python demo.py [--backend {hw,sim}] [--ifname IFNAME]
 ```
 
+To experiment with a simple graphical interface, launch `gui.py`. Use
+`--simulate` to run against the built-in servo simulator:
+
+```bash
+python gui.py --simulate
+```
+
 By default the script uses the first network adapter returned by
 `get_first_adapter()` from `get_adapter_name.py`.  Use the optional
 `--backend` argument to select between the real servo (`hw`) and the simulator
