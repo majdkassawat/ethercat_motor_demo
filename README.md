@@ -75,6 +75,23 @@ The included integration tests call the Python demo script to verify that the
 servo can be reached and that motion commands succeed.  Inspect the console
 output and the generated Allure report when debugging problems.
 
+### Test Layout
+
+Tests that run purely in simulation live under `tests/software/` and are
+executed automatically by CI.  Hardware integration tests reside in
+`tests/hardware/` and must be run manually on a machine connected to the servo.
+
+### Quick Logging Helper
+
+`run_hw_tests.py` can be used to execute the hardware integration tests once and
+store the console output in the `outputs/` directory.  After the tests finish
+the log file is committed to the repository automatically.  Adjust the `config`
+file to set your Git username and email if required.
+
+```bash
+python run_hw_tests.py
+```
+
 
 ## Running Tests with the Servo Simulator
 
@@ -88,7 +105,7 @@ one terminal and then execute the tests from another:
 servo-sim --esi JMC_DRIVE_V1.8.xml
 
 # run the Python integration tests against the simulator
-pytest tests/test_device_controller.py --alluredir TestResults
+pytest tests/software/test_device_controller.py --alluredir TestResults
 ```
 
 The ESI file describes PDO and SDO entries, so the simulator knows that the

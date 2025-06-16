@@ -22,7 +22,7 @@ def run(cmd, cwd=None):
 
 
 def run_tests(root: Path) -> bool:
-    return run("pytest -s --alluredir TestResults tests/test_device_controller.py", cwd=root)
+    return run("pytest -s --alluredir TestResults tests/hardware/test_device_controller.py", cwd=root)
 
 
 def generate_report(root: Path) -> bool:
