@@ -14,6 +14,7 @@ class EthercatServo:
     TARGET_POSITION = 0x607A
     TARGET_VELOCITY = 0x60FF
     ACTUAL_POSITION = 0x6064
+    DIGITAL_OUTPUTS = 0x60FE
 
     def __init__(self, ifname: str, slave_pos: int = 0) -> None:
         self.ifname = ifname
@@ -71,4 +72,13 @@ class EthercatServo:
         # Set the "new set-point" and "change set immediately" bits
         # according to CiA 402 profile position mode.
         self.write_sdo(self.CONTROL_WORD, 0, 0x3F)
+        time.sleep(0.05)
+
+    def release_brake(self) -> None:
+        """Release the motor brake using digital outputs if available."""
+        try:
+            state = self.read_sdo(self.DIGITAL_OUTPUTS, 1, size=1)
+        except Exception:
+            state = 0
+        self.write_sdo(self.DIGITAL_OUTPUTS, 1, state | 0x01, size=1)
         time.sleep(0.05)
