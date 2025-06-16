@@ -62,3 +62,8 @@ automates running integration tests on a Windows PC attached to the servo.
 The included integration tests call the Python demo script to verify that the
 servo can be reached and that motion commands succeed.  Inspect the console
 output and the generated Allure report when debugging problems.
+
+## License
+
+This project is released under the [MIT License](LICENSE).
+
