@@ -32,8 +32,10 @@ to let the helper translate it to a motor shaft position automatically.
 `release_brake()` and `enable_controller()` access the digital outputs object
 (`0x60FE`, subindex 1).  According to the included ESI file the value is a
 32‑bit unsigned integer, so the demo writes four bytes when toggling the
-control bits.  The exact object index and bit assignments may vary, so consult
-your servo's documentation if these helpers do not work out of the box.
+control bits.  The simulator loads the same ESI description to emulate the
+drive, therefore the object layout is identical when running tests.  The exact
+object index and bit assignments may vary between servos, so consult your
+servo's documentation if these helpers do not work out of the box.
 
 ## Files
 
@@ -62,3 +64,24 @@ automates running integration tests on a Windows PC attached to the servo.
 The included integration tests call the Python demo script to verify that the
 servo can be reached and that motion commands succeed.  Inspect the console
 output and the generated Allure report when debugging problems.
+
+## Running Tests with the Servo Simulator
+
+A lightweight servo simulator is provided for exercising the integration tests
+without real hardware.  It reads the included `JMC_DRIVE_V1.8.xml` ESI file to
+recreate the slave's object dictionary and behavior.  Launch the simulator in
+one terminal and then execute the tests from another:
+
+```bash
+# start the simulator using the ESI description
+servo-sim --esi JMC_DRIVE_V1.8.xml
+
+# run the .NET integration tests against the simulator
+dotnet test CodexHardwareLoop/src/IntegrationTests/IntegrationTests.csproj \
+    --configuration Release --no-build
+```
+
+The ESI file describes PDO and SDO entries, so the simulator knows that the
+digital output object (`0x60FE`, subindex 1) is 32 bits wide.  The Python demo
+and the tests can therefore interact with the simulated slave exactly like with
+the real device.
