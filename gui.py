@@ -10,6 +10,19 @@ else:
 
 from get_adapter_name import get_first_adapter
 
+# Indices of registers displayed in the GUI.  Each entry contains
+# (index, subindex, name, size_in_bytes).
+REGISTER_DEFS = [
+    (0x6040, 0, "controlword", 2),
+    (0x6041, 0, "statusword", 2),
+    (0x6060, 0, "op_mode", 1),
+    (0x6061, 0, "op_mode_display", 1),
+    (0x607A, 0, "target_position", 4),
+    (0x60FF, 0, "target_velocity", 4),
+    (0x6064, 0, "actual_position", 4),
+    (0x60FE, 1, "physical_outputs", 4),
+]
+
 class ServoGUI:
     def __init__(self, root, servo):
         self.root = root
@@ -34,6 +47,15 @@ class ServoGUI:
 
         ttk.Label(frame, text="Status:").grid(row=3, column=0, sticky="w")
         ttk.Label(frame, textvariable=self.status_var).grid(row=3, column=1, sticky="w")
+
+        reg_frame = ttk.LabelFrame(frame, text="Registers")
+        reg_frame.grid(row=4, column=0, columnspan=2, sticky="nsew", pady=(10, 0))
+        self.register_vars = {}
+        for r, (idx, sub, name, size) in enumerate(REGISTER_DEFS):
+            ttk.Label(reg_frame, text=f"{name} (0x{idx:04X}:{sub})").grid(row=r, column=0, sticky="w")
+            var = tk.StringVar(value="n/a")
+            ttk.Label(reg_frame, textvariable=var).grid(row=r, column=1, sticky="w")
+            self.register_vars[(idx, sub)] = (var, size)
 
         root.protocol("WM_DELETE_WINDOW", self.close)
         self.root.after(200, self.update)
@@ -70,6 +92,13 @@ class ServoGUI:
                 status = self.servo.read_sdo(0x6041, 0)
                 if status & 0x08:
                     self.status_var.set("Fault")
+                for idx, sub, name, size in REGISTER_DEFS:
+                    var, sz = self.register_vars[(idx, sub)]
+                    try:
+                        val = self.servo.read_sdo(idx, sub, size=sz)
+                        var.set(str(val))
+                    except Exception:
+                        var.set("err")
             except Exception as exc:
                 self.status_var.set(f"Error: {exc}")
         self.root.after(200, self.update)
