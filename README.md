@@ -30,6 +30,10 @@ python demo.py
 
 Edit the network interface name and slave position in `demo.py` if needed.
 
+`release_brake()` and `enable_controller()` access the digital outputs object
+(`0x60FE`). The exact object index and bits may vary, so consult your servo's
+documentation if these helpers do not work out of the box.
+
 ## Files
 
 - `ethercat_servo.py` – simple low level API for CiA&nbsp;402 EtherCAT servos
