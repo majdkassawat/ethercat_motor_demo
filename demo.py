@@ -1,4 +1,9 @@
-from ethercat_servo import EthercatServo
+import os
+
+if os.getenv("SIMULATION") == "1":
+    from servo_simulator import ServoSimulator as EthercatServo
+else:
+    from ethercat_servo import EthercatServo
 import time
 
 # Device name copied from get_adapter_name.py output

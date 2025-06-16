@@ -39,6 +39,9 @@ namespace HardwareInterface
                 UseShellExecute = false,
                 WorkingDirectory = repoDir
             };
+
+            if (Environment.GetEnvironmentVariable("SIMULATION") == "1")
+                psi.Environment["SIMULATION"] = "1";
             using var proc = Process.Start(psi)!;
             string output = await proc.StandardOutput.ReadToEndAsync();
             string error  = await proc.StandardError.ReadToEndAsync();
