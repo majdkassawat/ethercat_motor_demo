@@ -6,3 +6,4 @@ obj/
 TestResults/
 AllureReport/
 *.zip
+__pycache__/
