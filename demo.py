@@ -1,26 +1,35 @@
 import os
-
-if os.getenv("SIMULATION") == "1":
-    from servo_simulator import ServoSimulator as EthercatServo
-else:
-    from ethercat_servo import EthercatServo
-
 import argparse
-
 import time
-
-from ethercat_servo import EthercatServo
-from get_adapter_name import get_first_adapter
-
-# Environment variable to override the detected adapter name
-ENV_IFNAME = "ECAT_IFNAME"
 
 # Example 30:1 planetary gearbox
 GEAR_RATIO = 30
 
+ENV_IFNAME = "ECAT_IFNAME"
 
-def main(ifname: str | None = None) -> None:
-    """Run a small motion demo on the first EtherCAT slave."""
+
+def import_backend(backend: str):
+    """Return Servo class and adapter helper for chosen backend."""
+    if backend == "sim":
+        from servo_simulator import ServoSimulator as EthercatServo
+
+        def get_first_adapter() -> str:
+            return "sim"
+
+    else:
+        from ethercat_servo import EthercatServo
+        from get_adapter_name import get_first_adapter
+
+    return EthercatServo, get_first_adapter
+
+
+def main(ifname: str | None = None, backend: str | None = None) -> None:
+    """Run a small motion demo on the first EtherCAT slave or simulator."""
+
+    if backend is None:
+        backend = "sim" if os.getenv("SIMULATION") == "1" else "hw"
+
+    EthercatServo, get_first_adapter = import_backend(backend)
 
     if ifname is None:
         ifname = os.environ.get(ENV_IFNAME)
@@ -50,5 +59,11 @@ if __name__ == "__main__":
         metavar="IFNAME",
         help="Ethernet adapter name used for EtherCAT communication",
     )
+    parser.add_argument(
+        "--backend",
+        choices=["hw", "sim"],
+        help="Select 'hw' for real hardware or 'sim' for the simulator",
+        default=None,
+    )
     args = parser.parse_args()
-    main(args.ifname)
+    main(args.ifname, args.backend)
