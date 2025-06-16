@@ -25,6 +25,10 @@ python demo.py
 
 Edit the network interface name and slave position in `demo.py` if needed.
 
+Use `set_target_position_after_gearbox()` when commanding positions at the
+load side of a gearbox.  Pass the desired output position and the gearbox ratio
+to let the helper translate it to a motor shaft position automatically.
+
 `release_brake()` and `enable_controller()` access the digital outputs object
 (`0x60FE`, subindex 1).  According to the included ESI file the value is a
 32‑bit unsigned integer, so the demo writes four bytes when toggling the
@@ -33,8 +37,9 @@ your servo's documentation if these helpers do not work out of the box.
 
 ## Files
 
-- `ethercat_servo.py` – simple low level API for CiA&nbsp;402 EtherCAT servos
-- `demo.py` – example script using `EthercatServo`
+ - `ethercat_servo.py` – simple low level API for CiA&nbsp;402 EtherCAT servos
+   including `set_target_position_after_gearbox()` for gear ratios
+ - `demo.py` – example script using `EthercatServo`
 - `CodexHardwareLoop` – .NET solution for hardware-in-the-loop testing
 
 ## Hardware-in-the-Loop Automation
