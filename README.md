@@ -54,7 +54,28 @@ servo's documentation if these helpers do not work out of the box.
  - `ethercat_servo.py` – simple low level API for CiA&nbsp;402 EtherCAT servos
    including `set_target_position_after_gearbox()` for gear ratios
  - `demo.py` – example script using `EthercatServo`
- - `hardware_loop.py` – Python agent for hardware-in-the-loop testing
+- `hardware_loop.py` – Python agent for hardware-in-the-loop testing
+
+## Register Map
+
+The demo interacts with a few CiA&nbsp;402 objects via SDO access.  The table
+below summarizes the indices referenced by the code.  Names are taken from the
+included `JMC_DRIVE_V1.8.xml` file.  Consult the ESI description for the full
+object dictionary.
+
+| Index (subindex) | ESI name          | Access | Purpose |
+|------------------|------------------|--------|---------|
+| `0x6040`         | `controlword`     | rw     | Control word used to switch states and trigger motion |
+| `0x6041`         | `statusword`      | ro     | Current state of the drive |
+| `0x6060`         | `op_mode`         | rw     | Selects the desired mode of operation |
+| `0x6061`         | `op_mode_display` | ro     | Shows the active mode of operation |
+| `0x607A`         | `target_position` | rw     | Target position command |
+| `0x60FF`         | `target_velocity` | rw     | Target velocity command |
+| `0x6064`         | `actual_position` | ro     | Position feedback value |
+| `0x60FE:1`       | `physical_outputs`| rw     | Digital outputs for brake release and controller enable |
+
+The graphical interface (`gui.py`) includes a *Registers* panel that shows these
+values in real time when connected to a servo or the simulator.
 
 ## Hardware-in-the-Loop Automation
 
