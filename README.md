@@ -7,13 +7,13 @@ EtherCAT integrated servo motor.
 ## Requirements
 
 - Python 3.11+
-- [pysoem](https://github.com/bnjmnp/pysoem) (installed automatically via `pip`)
+- [pysoem](https://github.com/bnjmnp/pysoem) (installed automatically via `pip` from `requirements.txt`)
 - An Ethernet interface connected to the servo (e.g. `eth0`)
 
 Install dependencies:
 
 ```bash
-pip install pysoem
+pip install -r requirements.txt
 ```
 
 ## Usage
@@ -23,7 +23,11 @@ pip install pysoem
 python demo.py
 ```
 
-Edit the network interface name and slave position in `demo.py` if needed.
+By default the script uses the first network adapter returned by
+`get_first_adapter()` from `get_adapter_name.py`.  You can override the adapter
+name via the `ECAT_IFNAME` environment variable or with
+`python demo.py --ifname IFNAME`.  Adjust the slave position in `demo.py` if
+needed.
 
 Use `set_target_position_after_gearbox()` when commanding positions at the
 load side of a gearbox.  Pass the desired output position and the gearbox ratio
@@ -62,3 +66,8 @@ automates running integration tests on a Windows PC attached to the servo.
 The included integration tests call the Python demo script to verify that the
 servo can be reached and that motion commands succeed.  Inspect the console
 output and the generated Allure report when debugging problems.
+
+## License
+
+This project is released under the [MIT License](LICENSE).
+
