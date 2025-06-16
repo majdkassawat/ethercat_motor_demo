@@ -19,7 +19,8 @@ pip install pysoem
 ## Usage
 
 `demo.py` shows a basic sequence to enable the servo and move it to a target
-position using the CiA&nbsp;402 profile position mode.
+position using the CiA&nbsp;402 profile position mode. After setting the target
+position the example calls `start_motion()` to trigger the move.
 
 ```bash
 python demo.py
