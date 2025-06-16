@@ -12,6 +12,8 @@ def main():
     try:
         servo.set_mode(1)             # profile-position mode
         servo.enable_operation()
+        servo.release_brake()
+        servo.enable_controller()
         servo.set_target_position(10000)
         servo.start_motion()
         time.sleep(2)
