@@ -79,18 +79,18 @@ class EthercatServo:
     def release_brake(self) -> None:
         """Release the motor brake using digital outputs if available."""
         try:
-            state = self.read_sdo(self.DIGITAL_OUTPUTS, 1, size=1)
+            state = self.read_sdo(self.DIGITAL_OUTPUTS, 1, size=4)
         except Exception:
             state = 0
-        self.write_sdo(self.DIGITAL_OUTPUTS, 1, state | 0x01, size=1)
+        self.write_sdo(self.DIGITAL_OUTPUTS, 1, state | 0x01, size=4)
         time.sleep(0.05)
 
     def enable_controller(self) -> None:
         """Enable controller with Fw and Fb control bits."""
         try:
-            state = self.read_sdo(self.DIGITAL_OUTPUTS, 1, size=1)
+            state = self.read_sdo(self.DIGITAL_OUTPUTS, 1, size=4)
         except Exception:
             state = 0
-        self.write_sdo(self.DIGITAL_OUTPUTS, 1, state | self.CONTROLLER_BITS, size=1)
+        self.write_sdo(self.DIGITAL_OUTPUTS, 1, state | self.CONTROLLER_BITS, size=4)
         time.sleep(0.05)
 
