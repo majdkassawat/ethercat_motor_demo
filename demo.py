@@ -4,16 +4,30 @@ if os.getenv("SIMULATION") == "1":
     from servo_simulator import ServoSimulator as EthercatServo
 else:
     from ethercat_servo import EthercatServo
+
+import argparse
+
 import time
 
-# Device name copied from get_adapter_name.py output
-IFNAME = r"\Device\NPF_{99F254B6-0FBF-4B4D-B9DB-F9CA300B4CCF}"  # TwinCAT-Intel PCI Ethernet Adapter (Gigabit)
-GEAR_RATIO = 30  # Example 30:1 planetary gearbox
+from ethercat_servo import EthercatServo
+from get_adapter_name import get_first_adapter
+
+# Environment variable to override the detected adapter name
+ENV_IFNAME = "ECAT_IFNAME"
+
+# Example 30:1 planetary gearbox
+GEAR_RATIO = 30
 
 
-def main():
-    # Use the selected Ethernet adapter for EtherCAT communication
-    servo = EthercatServo(ifname=IFNAME, slave_pos=0)
+def main(ifname: str | None = None) -> None:
+    """Run a small motion demo on the first EtherCAT slave."""
+
+    if ifname is None:
+        ifname = os.environ.get(ENV_IFNAME)
+    if ifname is None:
+        ifname = get_first_adapter()
+
+    servo = EthercatServo(ifname=ifname, slave_pos=0)
     servo.open()
     try:
         servo.set_mode(1)             # profile-position mode
@@ -29,4 +43,12 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Minimal EtherCAT servo demo")
+    parser.add_argument(
+        "-i",
+        "--ifname",
+        metavar="IFNAME",
+        help="Ethernet adapter name used for EtherCAT communication",
+    )
+    args = parser.parse_args()
+    main(args.ifname)
