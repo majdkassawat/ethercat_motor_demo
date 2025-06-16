@@ -7,13 +7,13 @@ EtherCAT integrated servo motor.
 ## Requirements
 
 - Python 3.11+
-- [pysoem](https://github.com/bnjmnp/pysoem) (installed automatically via `pip`)
+- [pysoem](https://github.com/bnjmnp/pysoem) (installed automatically via `pip` from `requirements.txt`)
 - An Ethernet interface connected to the servo (e.g. `eth0`)
 
 Install dependencies:
 
 ```bash
-pip install pysoem
+pip install -r requirements.txt
 ```
 
 ## Usage
