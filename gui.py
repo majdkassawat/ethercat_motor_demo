@@ -8,7 +8,7 @@ if os.getenv("SIMULATION") == "1":
 else:
     from ethercat_servo import EthercatServo
 
-from get_adapter_name import get_first_adapter
+from get_adapter_name import get_adapter_name
 
 # Indices of registers displayed in the GUI.  Each entry contains
 # (index, subindex, name, size_in_bytes).
@@ -116,7 +116,7 @@ def main(ifname=None, simulate=False):
     if ifname is None:
         ifname = os.environ.get("ECAT_IFNAME")
     if ifname is None:
-        ifname = get_first_adapter()
+        ifname = get_adapter_name()
 
     if simulate:
         servo = EthercatServo(ifname=ifname, slave_pos=0)

@@ -9,6 +9,9 @@ Works with both PySOEM ≥1.0 (str fields) and earlier versions (bytes fields).
 from __future__ import annotations
 import pysoem
 
+# Default adapter name used when no search is performed
+IFNAME = r"\Device\NPF_{99F254B6-0FBF-4B4D-B9DB-F9CA300B4CCF}"
+
 
 def _to_str(value: str | bytes) -> str:
     """Convert bytes → str if needed (PySOEM ≤0.3) else return unchanged."""
@@ -21,6 +24,25 @@ def list_adapters() -> None:
         name = _to_str(ad.name)
         desc = _to_str(ad.desc)
         print(f"{name}  —  {desc}")
+
+
+def get_adapter_name(search: str = "default") -> str:
+    """Return the adapter name.
+
+    Parameters
+    ----------
+    search : str
+        Pass ``"search"`` to print all available adapters and return the
+        first suitable adapter.  Any other value (including ``"default"``)
+        returns :data:`IFNAME`.
+    """
+    if search == "search":
+        list_adapters()
+        try:
+            return get_first_adapter()
+        except RuntimeError:
+            return IFNAME
+    return IFNAME
 
 
 def get_first_adapter(exclude_loopback: bool = True) -> str:

@@ -13,14 +13,14 @@ def import_backend(backend: str):
     if backend == "sim":
         from servo_simulator import ServoSimulator as EthercatServo
 
-        def get_first_adapter() -> str:
+        def get_adapter_name(search: str = "default") -> str:
             return "sim"
 
     else:
         from ethercat_servo import EthercatServo
-        from get_adapter_name import get_first_adapter
+        from get_adapter_name import get_adapter_name
 
-    return EthercatServo, get_first_adapter
+    return EthercatServo, get_adapter_name
 
 
 def main(ifname: str | None = None, backend: str | None = None) -> None:
@@ -29,12 +29,12 @@ def main(ifname: str | None = None, backend: str | None = None) -> None:
     if backend is None:
         backend = "sim" if os.getenv("SIMULATION") == "1" else "hw"
 
-    EthercatServo, get_first_adapter = import_backend(backend)
+    EthercatServo, get_adapter_name = import_backend(backend)
 
     if ifname is None:
         ifname = os.environ.get(ENV_IFNAME)
     if ifname is None:
-        ifname = get_first_adapter()
+        ifname = get_adapter_name()
 
     servo = EthercatServo(ifname=ifname, slave_pos=0)
     servo.open()
