@@ -1,3 +1,4 @@
+import argparse
 import os
 import subprocess
 import sys
@@ -9,6 +10,24 @@ from pathlib import Path
 REMOTE = "origin"
 BRANCH = "main"
 RESULTS_PREFIX = "results/"
+
+
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(description="Hardware-in-the-loop test runner")
+    p.add_argument(
+        "-y",
+        "--yes",
+        action="store_true",
+        help="run tests automatically without prompting",
+    )
+    p.add_argument(
+        "--sleep",
+        type=int,
+        default=60,
+        metavar="SECONDS",
+        help="how long to wait between polling cycles (default: 60)",
+    )
+    return p.parse_args()
 
 
 def repo_root() -> Path:
@@ -53,19 +72,23 @@ def push_results(root: Path, sha: str, zip_path: Path):
 
 
 def main():
+    args = parse_args()
     root = repo_root()
     while True:
         run(f"git fetch {REMOTE}", cwd=root)
         local_sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
         remote_sha = subprocess.check_output(["git", "rev-parse", f"{REMOTE}/{BRANCH}"], cwd=root, text=True).strip()
         if local_sha == remote_sha:
-            print("No new commit. Sleeping 60 s.")
-            time.sleep(60)
+            print(f"No new commit. Sleeping {args.sleep} s.")
+            time.sleep(args.sleep)
             continue
         run(f"git reset --hard {REMOTE}/{BRANCH}", cwd=root)
-        ans = input(f"New commit {remote_sha[:7]} detected. Run integration tests now? [y/N] ")
-        if ans.lower() != 'y':
-            continue
+        if not args.yes:
+            ans = input(f"New commit {remote_sha[:7]} detected. Run integration tests now? [y/N] ")
+            if ans.lower() != 'y':
+                continue
+        else:
+            print(f"New commit {remote_sha[:7]} detected. Running integration tests...")
         if not run_tests(root):
             print("Tests failed")
             continue

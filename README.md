@@ -86,9 +86,10 @@ automates running integration tests on a PC attached to the servo.
 
 1. Install Git and Python. The optional Allure CLI can be used to create HTML
    reports.
-2. Run `python hardware_loop.py`.
+2. Run `python hardware_loop.py`. Add `-y` to run automatically.
 3. The agent periodically fetches the repository. When a new commit is detected
    you will be prompted to press <kbd>Y</kbd> to execute the hardware tests.
+   Use `-y` to skip the prompt and execute the tests immediately.
 4. If available, an Allure report is generated and pushed to a branch named
    `results/<commit SHA>`.
 
