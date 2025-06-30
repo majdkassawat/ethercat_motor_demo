@@ -20,8 +20,8 @@ class DeviceController:
             self.servo.open()
         else:
             from ethercat_servo import EthercatServo
-            from get_adapter_name import get_first_adapter
-            ifname = os.getenv("ECAT_IFNAME", get_first_adapter())
+            from get_adapter_name import get_adapter_name
+            ifname = os.getenv("ECAT_IFNAME", get_adapter_name())
             self.servo = EthercatServo(ifname=ifname)
             self.servo.open()
 

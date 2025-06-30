@@ -30,12 +30,14 @@ To experiment with a simple graphical interface, launch `gui.py`. Use
 python gui.py --simulate
 ```
 
-By default the script uses the first network adapter returned by
-`get_first_adapter()` from `get_adapter_name.py`.  Use the optional
+By default the script uses the adapter returned by
+`get_adapter_name()` from `get_adapter_name.py`.  Use the optional
 `--backend` argument to select between the real servo (`hw`) and the simulator
 (`sim`).  The default is `hw`.  You can override the adapter name via the
 `ECAT_IFNAME` environment variable or with `--ifname IFNAME`.  Adjust the slave
 position in `demo.py` if needed.
+Pass ``"search"`` to ``get_adapter_name()`` to list available adapters and use
+the first one found.
 
 Use `set_target_position_after_gearbox()` when commanding positions at the
 load side of a gearbox.  Pass the desired output position and the gearbox ratio
